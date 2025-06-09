@@ -24,21 +24,21 @@
         <button type="submit">{{ isset($student) ? 'Update' : 'Add' }}</button>
     </form>
 
- {{-- Student List --}}
-    <h2>All Students</h2>
-    <ul>
-        @foreach ($students as $s)
-            <li>
-                {{ $s->name }} - {{ $s->email }} ({{ $s->age }} years)
-                <a href="/students/{{ $s->id }}/edit">Edit</a>
-                <form method="POST" action="/students/{{ $s->id }}/delete" style="display:inline;">
-                    @csrf
-                    <button type="submit" onclick="return confirm('Delete student?')">Delete</button>
-                </form>
-            </li>
-        @endforeach
-    </ul>
+  <h1>Student List</h1>
 
+    {{-- Success Message --}}
+    @if(session('success'))
+        <p style="color: green;">{{ session('success') }}</p>
+    @endif
 
+    {{-- Student Form --}}
+    <h2>{{ isset($student) ? 'Edit Student' : 'Add New Student' }}</h2>
+    <form method="POST" action="{{ isset($student) ? '/students/' . $student->id . '/update' : '/students' }}">
+        @csrf
+        <input type="text" name="name" placeholder="Name" value="{{ $student->name ?? '' }}" required>
+        <input type="email" name="email" placeholder="Email" value="{{ $student->email ?? '' }}" required>
+        <input type="number" name="age" placeholder="Age" value="{{ $student->age ?? '' }}" required>
+        <button type="submit">{{ isset($student) ? 'Update' : 'Add' }}</button>
+    </form>
 </body>
 </html>
