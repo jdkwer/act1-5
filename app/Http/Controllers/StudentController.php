@@ -24,5 +24,30 @@ class StudentController extends Controller
     Student::create($request->only(['name', 'email', 'age']));
     return redirect('/students')->with('success', 'Student added!');
 }
+    public function edit($id)
+{
+    $students = Student::all();
+    $student = Student::findOrFail($id);
+    return view('students.index', compact('students', 'student'));
+}
+
+public function update(Request $request, $id)
+{
+    $student = Student::findOrFail($id);
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email|unique:students,email,' . $id,
+        'age' => 'required|integer'
+    ]);
+    $student->update($request->only(['name', 'email', 'age']));
+    return redirect('/students')->with('success', 'Student updated!');
+}
+
+public function destroy($id)
+{
+    Student::findOrFail($id)->delete();
+    return redirect('/students')->with('success', 'Student deleted!');
+}
+
 
 }
